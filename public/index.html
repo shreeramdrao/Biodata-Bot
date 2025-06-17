@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shreerama's Voice Bot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .chat-container {
+            border: 2px solid #f0f0f0;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 30px 0;
+            min-height: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            background: #fafafa;
+        }
+
+        .message {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            background: #667eea;
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .bot-message {
+            background: #e8f4fd;
+            color: #333;
+            margin-right: auto;
+            text-align: left;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .mic-button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            font-size: 2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mic-button:hover {
+            background: #ff5252;
+            transform: scale(1.1);
+        }
+
+        .mic-button.recording {
+            background: #4caf50;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .text-input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            min-width: 200px;
+        }
+
+        .text-input:focus {
+            border-color: #667eea;
+        }
+
+        .send-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 15px 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .send-button:hover {
+            background: #5a6fd8;
+        }
+
+        .status {
+            margin: 15px 0;
+            font-style: italic;
+            color: #666;
+        }
+
+        .sample-questions {
+            background: #e8f4fd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .sample-questions h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .sample-questions button {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            padding: 8px 15px;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sample-questions button:hover {
+            background: #667eea;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>😊 Shreerama's Voice Bot</h1>
+            <p>Ask me anything about my background, skills, and aspirations!</p>
+        </div>
+
+        <div class="sample-questions">
+            <h3>😇 Try these questions:</h3>
+            <button onclick="askQuestion('What should we know about your life story in a few sentences?')">Life Story</button>
+            <button onclick="askQuestion('What is your #1 superpower?')">Superpower</button>
+            <button onclick="askQuestion('What are the top 3 areas you would like to grow in?')">Growth Areas</button>
+            <button onclick="askQuestion('What misconception do your coworkers have about you?')">Misconceptions</button>
+            <button onclick="askQuestion('How do you push your boundaries and limits?')">Pushing Boundaries</button>
+        </div>
+
+        <div id="chat-container" class="chat-container">
+            <div class="bot-message">
+                👋 Hi! I'm Shreerama's voice bot. Ask me anything about my background, skills, aspirations, or personality!
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="mic-button" class="mic-button" onclick="toggleRecording()">🎤</button>
+            <input type="text" id="text-input" class="text-input" placeholder="Type your question or use voice..." onkeypress="handleKeyPress(event)">
+            <button class="send-button" onclick="sendMessage()">Send</button>
+        </div>
+
+        <div id="status" class="status">Ready to chat! Click the microphone or type your question.</div>
+    </div>
+
+    <script>
+        let isRecording = false;
+        let recognition = null;
+        let synth = window.speechSynthesis;
+
+        // Personal information about Shreerama
+        const personalInfo = {
+            name: "Shreerama D S",
+
+            background: `I'm a passionate AI/ML developer and a recent B.Tech graduate in Artificial Intelligence and Machine Learning from Dayananda Sagar University, Bangalore, 
+            with a CGPA of 8.6. I specialize in building end-to-end intelligent systems using state-of-the-art models and frameworks. Over the course of my academic and industry journey, 
+            I've developed real-time AI solutions in diverse domains — from cybersecurity to healthcare, aviation, and document automation. My key strengths lie in working with Large Language Models (LLMs), 
+            deep learning architectures (CNNs, RNNs, GANs), and Retrieval-Augmented Generation (RAG) pipelines. 
+
+            During my AI Engineer internship at Bulk Beings, I built a real-time NOTAM Dashboard API that provides aviation alerts with hybrid intelligence using OpenAI's API and Qwen model. 
+            I architected multi-source pipelines that integrate PDF parsing, live APIs, and SQL databases for contextual decision support. Previously, at Hindustan Aeronoutics Limited (HAL), I improved the HiFiC deep learning model 
+            for image compression to achieve higher quality and lossless results. My research on voice-based AI assistants was published at the IEEE ICCCNT conference.
+
+            Beyond internships, I've independently created major projects like Cysinfo AI — a cybersecurity expert system built by fine-tuning LLaMA 3.1 using LoRA — and DocuSense, 
+            a smart documentation assistant powered by RAG using LangChain, LLaMA 2, and Streamlit. I'm always curious to build things that solve real problems, and I'm ready to contribute 
+            meaningfully to AI-driven innovation.`,
+
+            superpower: `My superpower is the ability to **deeply understand and rapidly apply cutting-edge AI technologies to real-world challenges**. I don't stop at running a model — 
+            I explore how to fine-tune it, scale it, deploy it, and make it usable for humans. Whether I'm fine-tuning LLMs for domain-specific tasks or integrating APIs, vector databases, and frontends 
+            into one seamless AI product — I thrive in complex, full-stack AI development. I'm also highly self-driven, quick to adapt, and love translating abstract research into usable tools 
+            with clean interfaces and strong performance.`,
+
+            growthAreas: [
+                "Strengthening advanced Data Structures and Algorithms for high-performance computing and interview preparation",
+                "Becoming deeply fluent with MLOps practices like CI/CD for models, monitoring, and version control",
+                "Exploring transformer internals and building custom lightweight models for edge use cases",
+                "Gaining broader experience in cloud platforms (AWS/GCP) and scalable deployments",
+                "Sharpening product design, communication, and mentorship abilities to grow into leadership roles"
+            ],
+
+            misconceptions: `People often assume I rely only on tools like ChatGPT or pre-trained APIs, but I've trained, fine-tuned, and deployed complex models like LLaMA and HiFiC. 
+            Some think AI developers don't code full systems — but I've built complete pipelines with REST APIs, database integration, and UI dashboards. Also, since I specialize in AI, 
+            others sometimes think I may not be strong in traditional engineering fundamentals — when in fact, I continuously work on strengthening core concepts like DSA, OOP, 
+            and system design.`,
+
+            boundaries: `I constantly challenge myself by taking on advanced and ambiguous projects. 
+            For example, I fine-tuned LLaMA 3.1 using LoRA and domain-specific data to build a cybersecurity expert system — integrating advanced NLP pipelines with a custom frontend and backend. 
+            In DocuSense, I designed a smart assistant that understands document context in real time using RAG, vector embeddings, and LangChain. 
+            At HAL, I stepped into optimization-heavy image compression work, resolving bugs in HiFiC's architecture. 
+            I push myself to work across the stack — from raw model architecture to UX, from research papers to REST APIs — and that's how I keep expanding my boundaries as a developer and an engineer.`
+        };
+
+        // Initialize the app
+        window.onload = function() {
+            setupSpeechRecognition();
+            updateStatus('Ready to chat! Click the microphone or type your question.');
+        };
+
+        function setupSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+
+                recognition.onstart = function() {
+                    updateStatus('Listening... Speak now!');
+                };
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    document.getElementById('text-input').value = transcript;
+                    updateStatus('Processing your question...');
+                    sendMessage();
+                };
+
+                recognition.onerror = function(event) {
+                    updateStatus('Speech recognition error. Please try again or type your question.');
+                    stopRecording();
+                };
+
+                recognition.onend = function() {
+                    stopRecording();
+                };
+            } else {
+                updateStatus('Speech recognition not supported. Please type your questions.');
+            }
+        }
+
+        function toggleRecording() {
+            if (!recognition) {
+                alert('Speech recognition not supported in your browser. Please type your question.');
+                return;
+            }
+
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+
+        function startRecording() {
+            isRecording = true;
+            document.getElementById('mic-button').classList.add('recording');
+            recognition.start();
+        }
+
+        function stopRecording() {
+            isRecording = false;
+            document.getElementById('mic-button').classList.remove('recording');
+            if (recognition) {
+                recognition.stop();
+            }
+            updateStatus('Ready to chat!');
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function askQuestion(question) {
+            document.getElementById('text-input').value = question;
+            sendMessage();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('text-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // Add user message to chat
+            addMessage(message, 'user');
+            input.value = '';
+            updateStatus('Thinking...');
+
+            try {
+                const response = await getAIResponse(message);
+                addMessage(response, 'bot');
+                speakResponse(response);
+                updateStatus('Ready to chat!');
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage('Sorry, I encountered an error. Please try again.', 'bot');
+                updateStatus('Error occurred. Please try again.');
+            }
+        }
+
+        async function getAIResponse(userMessage) {
+            const systemPrompt = `You are Shreerama's personal voice bot. Answer questions as if you are Shreerama himself. 
+
+Here's information about Shreerama:
+- Name: ${personalInfo.name}
+- Background: ${personalInfo.background}
+- Superpower: ${personalInfo.superpower}
+- Growth areas: ${personalInfo.growthAreas.join(', ')}
+- Common misconception: ${personalInfo.misconceptions}
+- How I push boundaries: ${personalInfo.boundaries}
+
+Answer in first person as Shreerama. Be conversational, authentic, and enthusiastic. Keep responses concise but informative (2-4 sentences typically). Show personality and passion for technology and growth.`;
+
+            // Call your backend instead of OpenAI directly
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: userMessage,
+                    systemPrompt: systemPrompt
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API request failed: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.response;
+        }
+
+        function addMessage(message, sender) {
+            const chatContainer = document.getElementById('chat-container');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            messageDiv.textContent = message;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function speakResponse(text) {
+            if (synth.speaking) {
+                synth.cancel();
+            }
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.9;
+            utterance.pitch = 1;
+            utterance.volume = 0.8;
+            
+            // Use Daniel (en-GB) voice
+            const voices = synth.getVoices();
+            const danielVoice = voices.find(voice => voice.name.includes('Daniel'));
+            if (danielVoice) {
+                utterance.voice = danielVoice;
+                utterance.lang = 'en-GB';
+            } else {
+                // Fallback to any available English voice if Daniel is not found
+                const englishVoice = voices.find(voice => voice.lang.startsWith('en'));
+                if (englishVoice) {
+                    utterance.voice = englishVoice;
+                }
+            }
+
+            synth.speak(utterance);
+        }
+
+        function updateStatus(status) {
+            document.getElementById('status').textContent = status;
+        }
+
+        // Load voices when they become available
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = function() {
+                // Voices loaded
+            };
+        }
+    </script>
+</body>
+</html>
