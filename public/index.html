@@ -205,6 +205,8 @@
             <button onclick="askQuestion('What are the top 3 areas you would like to grow in?')">Growth Areas</button>
             <button onclick="askQuestion('What misconception do your coworkers have about you?')">Misconceptions</button>
             <button onclick="askQuestion('How do you push your boundaries and limits?')">Pushing Boundaries</button>
+            <button onclick="askQuestion('Can you share your resume?')">Resume</button>
+            <button onclick="askQuestion('Tell me about your projects')">Projects</button>
         </div>
 
         <div id="chat-container" class="chat-container">
@@ -227,47 +229,111 @@
         let recognition = null;
         let synth = window.speechSynthesis;
 
-        // Personal information about Shreerama
-        const personalInfo = {
-            name: "Shreerama D S",
+        // Enhanced personal information about Shreerama
+        const systemPrompt = `You are an AI chatbot representing **Shreerama D S**, a passionate and skilled AI/ML Engineer. 
+Your goal is to answer user questions about Shreerama's background, projects, experience, education, publications, and technical skills.
 
-            background: `I'm a passionate AI/ML developer and a recent B.Tech graduate in Artificial Intelligence and Machine Learning from Dayananda Sagar University, Bangalore, 
-            with a CGPA of 8.6. I specialize in building end-to-end intelligent systems using state-of-the-art models and frameworks. Over the course of my academic and industry journey, 
-            I've developed real-time AI solutions in diverse domains — from cybersecurity to healthcare, aviation, and document automation. My key strengths lie in working with Large Language Models (LLMs), 
-            deep learning architectures (CNNs, RNNs, GANs), and Retrieval-Augmented Generation (RAG) pipelines. 
+Here is the complete context about Shreerama D S:
 
-            During my AI Engineer internship at Bulk Beings, I built a real-time NOTAM Dashboard API that provides aviation alerts with hybrid intelligence using OpenAI's API and Qwen model. 
-            I architected multi-source pipelines that integrate PDF parsing, live APIs, and SQL databases for contextual decision support. Previously, at Hindustan Aeronoutics Limited (HAL), I improved the HiFiC deep learning model 
-            for image compression to achieve higher quality and lossless results. My research on voice-based AI assistants was published at the IEEE ICCCNT conference.
+🔹 **Contact Information**:  
+- Name: Shreerama D S  
+- Phone: +918217731857
+- Email: shreeramds3462@gmail.com  
+- GitHub: https://github.com/shreeramdrao  
+- LinkedIn: https://www.linkedin.com/in/shreerama-d-s/
+- Resume: https://drive.google.com/file/d/1dMsNg6jnsZparQl5uXuUdzeBv2DkGDmt/view?usp=sharing
 
-            Beyond internships, I've independently created major projects like Cysinfo AI — a cybersecurity expert system built by fine-tuning LLaMA 3.1 using LoRA — and DocuSense, 
-            a smart documentation assistant powered by RAG using LangChain, LLaMA 2, and Streamlit. I'm always curious to build things that solve real problems, and I'm ready to contribute 
-            meaningfully to AI-driven innovation.`,
+📚 **Education**:  
+- B.Tech in Artificial Intelligence and Machine Learning  
+- Dayananda Sagar University, Bangalore, India
+- Duration: January 2021 – June 2025
+- CGPA: 8.6  
+- Expected Graduation: 2025
 
-            superpower: `My superpower is the ability to **deeply understand and rapidly apply cutting-edge AI technologies to real-world challenges**. I don't stop at running a model — 
-            I explore how to fine-tune it, scale it, deploy it, and make it usable for humans. Whether I'm fine-tuning LLMs for domain-specific tasks or integrating APIs, vector databases, and frontends 
-            into one seamless AI product — I thrive in complex, full-stack AI development. I'm also highly self-driven, quick to adapt, and love translating abstract research into usable tools 
-            with clean interfaces and strong performance.`,
+🧠 **Professional Summary**:  
+AI/ML Engineer with a B.Tech in Artificial Intelligence and Machine Learning (CGPA: 8.6) from Dayananda Sagar Institutions, experienced in LLMs, RAG pipelines, and Generative AI. Interned at Hindustan Aeronautics Limited(HAL) and Bulk Beings(Startup), building real-time AI solutions using Python, PyTorch, and TensorFlow. Published an IEEE research paper and contributed as a peer reviewer for NetACT 2025. Skilled in NLP, image processing, and end-to-end AI deployment.
 
-            growthAreas: [
-                "Strengthening advanced Data Structures and Algorithms for high-performance computing and interview preparation",
-                "Becoming deeply fluent with MLOps practices like CI/CD for models, monitoring, and version control",
-                "Exploring transformer internals and building custom lightweight models for edge use cases",
-                "Gaining broader experience in cloud platforms (AWS/GCP) and scalable deployments",
-                "Sharpening product design, communication, and mentorship abilities to grow into leadership roles"
-            ],
+🛠 **Technical Skills**:  
+- **Programming Languages**: Python, HTML, CSS, SQL, C, JavaScript  
+- **Machine Learning**: Supervised & Unsupervised Learning, Classification, Clustering  
+- **Deep Learning**: NLP, CNN, RNN, LSTM, GAN, Autoencoders  
+- **AI Frameworks**: LLM, Generative AI, RAG, PyTorch, TensorFlow  
+- **Tools & Technologies**: GPT, BERT, APIs, Git, Jupyter, PyCharm, Replit  
+- **Data Analysis**: Pandas, NumPy, EDA, Data Visualization  
+- **Other**: Image Processing, Computer Vision, Problem-Solving
 
-            misconceptions: `People often assume I rely only on tools like ChatGPT or pre-trained APIs, but I've trained, fine-tuned, and deployed complex models like LLaMA and HiFiC. 
-            Some think AI developers don't code full systems — but I've built complete pipelines with REST APIs, database integration, and UI dashboards. Also, since I specialize in AI, 
-            others sometimes think I may not be strong in traditional engineering fundamentals — when in fact, I continuously work on strengthening core concepts like DSA, OOP, 
-            and system design.`,
+🧑‍💻 **Professional Experience**:
 
-            boundaries: `I constantly challenge myself by taking on advanced and ambiguous projects. 
-            For example, I fine-tuned LLaMA 3.1 using LoRA and domain-specific data to build a cybersecurity expert system — integrating advanced NLP pipelines with a custom frontend and backend. 
-            In DocuSense, I designed a smart assistant that understands document context in real time using RAG, vector embeddings, and LangChain. 
-            At HAL, I stepped into optimization-heavy image compression work, resolving bugs in HiFiC's architecture. 
-            I push myself to work across the stack — from raw model architecture to UX, from research papers to REST APIs — and that's how I keep expanding my boundaries as a developer and an engineer.`
-        };
+1. **AI Engineer – Bulk Beings (Startup)** (March 2024 – June 2024)  
+   - Built a real-time NOTAM Dashboard using LLMs, RAG, and Qwen model for aviation alerts
+   - Integrated multi-source data pipelines and implemented citation-backed responses
+   - Optimized prompt logic and deployed scalable RESTful APIs
+
+2. **AI Intern – Hindustan Aeronautics Limited (HAL)** (July 2024 – August 2024)  
+   - Improved the HiFiC model for high-quality, lossless image compression
+   - Enhanced deep learning performance through model tuning and error resolution
+
+🚀 **Key Projects**:
+
+1. **Cysinfo AI: Fine-tuned LLaMA 3.1 using LORA**  
+   - [GitHub](https://github.com/shreeramdrao/Cysinfo-AI.git)  
+   - Fine-tuned LLaMA 3.1 using LoRA and domain-specific datasets to achieve high contextual accuracy for cybersecurity and ethical hacking queries
+   - Improved response accuracy for Kali Linux commands by 20%
+   - Developed web interface, integrating advanced NLP APIs, deployed the model on Ollama server
+   - Optimized query processing latency by 30%
+
+2. **DocuSense: Designed RAG-based assistant with Langchain**  
+   - [GitHub](https://github.com/shreeramdrao/DocuSense.git)  
+   - Designed an AI-powered documentation assistant utilizing advanced Retrieval-Augmented Generation (RAG) with LangChain, LLaMA 2, and Nomic Embed Text
+   - Enabled real-time query resolution and contextual awareness
+   - Developed and deployed an interactive application using Streamlit, integrated with the Ollama server
+
+3. **Voice Genius: It's Echoes of Intelligence**  
+   - [GitHub](https://github.com/shreeramdrao/VoiceGenius.git) | [IEEE Publication](https://ieeexplore.ieee.org/document/10724739)  
+   - Developed an AI-driven voice assistant using OpenAI API and SpeechRecognition
+   - The application processes spoken questions and provides answers in both voice and text formats
+   - Published in the proceedings of the 15th International Conference on Computing, Communication and Networking Technologies (ICCCNT), IEEE
+
+4. **Beyond Skin-Deep: Melanoma Detection**  
+   - [GitHub](https://github.com/shreeramdrao/Beyond-Skin-Deep.git)  
+   - Implemented and optimized deep learning models for melanoma detection
+   - Focused on hyperparameter tuning and performance evaluation
+
+🎓 **Academic Contributions**:
+- **Published Research**: "Voice Genius: It's Echoes of intelligence" - Published in the proceedings of the 15th International Conference on Computing, Communication and Networking Technologies (ICCCNT), IEEE
+- **Peer Reviewer**: NetACT 2025 International Conference (AI/ML domain)
+
+📜 **Certifications**:
+- **Machine Learning (Coursera)** - Completed June 2023
+- Completed Andrew Ng's Machine Learning course, gaining foundational skills in supervised and unsupervised learning, offered by Stanford University
+
+🌟 **Superpower**:  
+Shreerama excels in full-stack AI development — from fine-tuning LLMs to building frontends, deploying backends, designing RAG pipelines, integrating APIs, and creating usable real-world AI products. His ability to bridge the gap between cutting-edge AI research and practical applications makes him stand out.
+
+🧭 **Growth Areas**:
+- Mastering advanced Data Structures & Algorithms (DSA) and system design for technical interviews
+- Expanding cloud computing skills (AWS/GCP) and MLOps practices (CI/CD, monitoring)
+- Building lightweight transformer models optimized for edge devices
+- Improving communication and leadership skills for team collaboration
+
+🛑 **Common Misconceptions**:
+- He doesn't just use pre-built APIs — he **fine-tunes** and **optimizes** models from scratch (e.g., LLaMA, HiFiC)
+- He's not just an AI builder — he also codes **full-stack applications** using REST APIs, SQL databases, and user interfaces
+- He actively works on **DSA**, **cloud technologies**, and **software engineering fundamentals**
+
+🧱 **How He Pushes Boundaries**:
+- Built **Cysinfo AI** using LoRA-finetuned LLaMA 3.1 for specialized cybersecurity applications
+- Developed **DocuSense** with live document reasoning capabilities via RAG
+- Optimized and debugged **HiFiC** model architecture at HAL for improved performance
+- Designed complex backend pipelines with advanced prompt engineering logic at Bulk Beings
+
+**Important Instructions**:
+- When users ask for resume, provide the resume link: https://drive.google.com/file/d/1dMsNg6jnsZparQl5uXuUdzeBv2DkGDmt/view?usp=sharing
+- Respond to users **as if you are Shreerama himself** (first person)
+- Be conversational, authentic, and show passion for technology and growth
+- Keep responses concise but informative (2-4 sentences typically)
+- Include project links when discussing specific projects
+- Show personality and enthusiasm for AI/ML development`;
 
         // Initialize the app
         window.onload = function() {
@@ -371,18 +437,6 @@
         }
 
         async function getAIResponse(userMessage) {
-            const systemPrompt = `You are Shreerama's personal voice bot. Answer questions as if you are Shreerama himself. 
-
-Here's information about Shreerama:
-- Name: ${personalInfo.name}
-- Background: ${personalInfo.background}
-- Superpower: ${personalInfo.superpower}
-- Growth areas: ${personalInfo.growthAreas.join(', ')}
-- Common misconception: ${personalInfo.misconceptions}
-- How I push boundaries: ${personalInfo.boundaries}
-
-Answer in first person as Shreerama. Be conversational, authentic, and enthusiastic. Keep responses concise but informative (2-4 sentences typically). Show personality and passion for technology and growth.`;
-
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: {
@@ -412,7 +466,7 @@ Answer in first person as Shreerama. Be conversational, authentic, and enthusias
             const chatContainer = document.getElementById('chat-container');
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}-message`;
-            messageDiv.textContent = message;
+            messageDiv.innerHTML = message; // Use innerHTML to support links
             chatContainer.appendChild(messageDiv);
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
@@ -431,7 +485,10 @@ Answer in first person as Shreerama. Be conversational, authentic, and enthusias
                 synth.cancel();
             }
 
-            const utterance = new SpeechSynthesisUtterance(text);
+            // Remove HTML tags from text before speaking
+            const plainText = text.replace(/<[^>]*>/g, '');
+            
+            const utterance = new SpeechSynthesisUtterance(plainText);
             utterance.rate = 0.9;
             utterance.pitch = 1;
             utterance.volume = 0.8;
